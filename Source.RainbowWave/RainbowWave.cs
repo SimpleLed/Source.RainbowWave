@@ -106,14 +106,18 @@ namespace Source.RainbowWave
 				IsSource = true,
 				SupportsCustomConfig = true,
 				Id = Guid.Parse("e8c93cac-2379-4f8f-a4c8-8933e77e5c44"),
-				Author = "Fanman03"
+				Author = "Fanman03",
+                Blurb = "Simple rainbow wave effect.",
+                CurrentVersion = new ReleaseNumber(1, 0, 0, 0),
+                GitHubLink = "https://github.com/SimpleLed/Source.RainbowWave",
+                IsPublicRelease = true
 			};
 		}
 
 		// Token: 0x06000008 RID: 8 RVA: 0x000021EB File Offset: 0x000003EB
 		public string Name()
 		{
-			return "Rainbows";
+			return "Rainbow Wave";
 		}
 
 		// Token: 0x06000009 RID: 9 RVA: 0x000021F2 File Offset: 0x000003F2
