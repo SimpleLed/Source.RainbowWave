@@ -19,6 +19,8 @@ namespace Source.RainbowWave
 		public static Assembly assembly = Assembly.GetExecutingAssembly();
 		public static Stream imageStream = assembly.GetManifestResourceStream("Source.RainbowWave.rainbowwave.png");
         public event EventHandler DeviceRescanRequired;
+        public event Events.DeviceChangeEventHandler DeviceAdded;
+        public event Events.DeviceChangeEventHandler DeviceRemoved;
 
         [JsonIgnore]
 		public RainbowWaveConfigModel configModel = new RainbowWaveConfigModel();
@@ -49,7 +51,7 @@ namespace Source.RainbowWave
 				};
 			}
 			this.timer = new Timer(new TimerCallback(this.TimerCallback), null, 0, 33);
-		}
+        }
 
 		// Token: 0x06000002 RID: 2 RVA: 0x000020E0 File Offset: 0x000002E0
 		private void TimerCallback(object state)
@@ -60,31 +62,35 @@ namespace Source.RainbowWave
 				float num = (float)((i + (this.cycle / 5)) % 20);
 				double num2 = (double)num / 20.0;
 				int num3 = (int)(num2 * 360.0);
-				this.leds[i].Color = LEDColor.FromHSV(num3, 100, 100);
+				this.leds[i].Color = LEDColor.FromHSV(num3, 1, 1);
 			}
-			this.cycle += configModel.Speed;
+
+            if (configModel.ReverseDirection)
+            {
+                this.cycle -= (int)configModel.Speed;
+            }
+			else
+            {
+                this.cycle += (int)configModel.Speed;
+            }
 		}
 
 		// Token: 0x06000003 RID: 3 RVA: 0x0000215E File Offset: 0x0000035E
 		public void Configure(DriverDetails driverDetails)
-		{
-		}
+        {
+            ControlDevice rainbowWaveDevice = new ControlDevice
+            {
+                Name = "Rainbow Wave",
+                Driver = this,
+                ProductImage = (Bitmap) System.Drawing.Image.FromStream(imageStream),
+                LEDs = this.leds,
+                DeviceType = DeviceTypes.Effect
+            };
 
-		// Token: 0x06000004 RID: 4 RVA: 0x00002164 File Offset: 0x00000364
-		public List<ControlDevice> GetDevices()
-		{
-			return new List<ControlDevice>
-			{
-				new ControlDevice
-				{
-					Name = "Rainbow Wave",
-					Driver = this,
-					ProductImage = (Bitmap) System.Drawing.Image.FromStream(imageStream),
-					LEDs = this.leds,
-					DeviceType = "Effect"
-				}
-			};
-		}
+            DeviceAdded?.Invoke(rainbowWaveDevice, new Events.DeviceChangeEventArgs(rainbowWaveDevice));
+
+        }
+
 
 		// Token: 0x06000005 RID: 5 RVA: 0x000021B4 File Offset: 0x000003B4
 		public void Push(ControlDevice controlDevice)
@@ -108,7 +114,7 @@ namespace Source.RainbowWave
 				Id = Guid.Parse("e8c93cac-2379-4f8f-a4c8-8933e77e5c44"),
 				Author = "Fanman03",
                 Blurb = "Simple rainbow wave effect.",
-                CurrentVersion = new ReleaseNumber(1, 0, 0, 0),
+                CurrentVersion = new ReleaseNumber(1, 0, 0, 1),
                 GitHubLink = "https://github.com/SimpleLed/Source.RainbowWave",
                 IsPublicRelease = true
 			};
@@ -151,8 +157,13 @@ namespace Source.RainbowWave
 			RainbowWaveConfigModel proxy = config as RainbowWaveConfigModel;
 		}
 
-		// Token: 0x04000001 RID: 1
-		private const int LEDCount = 20;
+        public void InterestedUSBChange(int VID, int PID, bool connected)
+        {
+            throw new NotImplementedException();
+        }
+
+        // Token: 0x04000001 RID: 1
+        private const int LEDCount = 20;
 
 		// Token: 0x04000002 RID: 2
 		private Timer timer;

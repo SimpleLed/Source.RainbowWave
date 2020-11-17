@@ -6,8 +6,24 @@
              xmlns:local="clr-namespace:Source.RainbowWave"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel>
-        <Label Foreground="White" Grid.Row="0">Speed</Label>
-        <Slider Margin="5,0,5,0" TickPlacement="BottomRight" TickFrequency="1" Minimum="0" Maximum="10" IsSnapToTickEnabled="True" Value="{Binding Speed}"></Slider>
-    </StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"></ColumnDefinition>
+            <ColumnDefinition Width="300"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" Width="300">
+            <Label>Speed</Label>
+            <DockPanel>
+                <Slider Width="250" DockPanel.Dock="Left" Margin="5,0,5,0" TickPlacement="BottomRight" TickFrequency="1" Minimum="0" Maximum="10" Value="{Binding Speed}"></Slider>
+                <Label DockPanel.Dock="Right" Content="{Binding Speed}" ContentStringFormat="{}{0:N0}"/>
+            </DockPanel>
+        </StackPanel>
+        <StackPanel Grid.Column="1" Width="300">
+            <Label>Reverse Direction</Label>
+            <CheckBox Margin="5,0,5,0" IsChecked="{Binding ReverseDirection}"></CheckBox>
+        </StackPanel>
+    </Grid>
 </UserControl>

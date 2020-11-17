@@ -5,13 +5,25 @@ namespace Source.RainbowWave
 {
     public class RainbowWaveConfigModel : SLSConfigData
     {
-        private int speed = 3;
-        public int Speed
+        private double speed = 3.0;
+        public double Speed
         {
             get => speed;
             set
             {
                 SetProperty(ref speed, value);
+                DataIsDirty = true;
+            }
+        }
+
+        private bool reverseDirection = false;
+
+        public bool ReverseDirection
+        {
+            get => reverseDirection;
+            set
+            {
+                SetProperty(ref reverseDirection, value);
                 DataIsDirty = true;
             }
         }
